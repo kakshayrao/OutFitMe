@@ -1,0 +1,6 @@
+torch==2.2.0
+torchvision==2.2.0
+tensorboardX
+pillow
+numpy
+opencv-contrib-python
