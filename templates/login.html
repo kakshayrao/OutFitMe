@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="static/css/loginpage.css">
+</head>
+<body>
+    <div class="container">
+        <div class="text">
+            <img src="/static/images/OutFitMe-Logo.jpg" class="logo" alt="OutFitMe-Logo">
+            <p>AI-Powered Virtual Try-On Shopping App</p>
+        </div>
+        <div class="wrapper">
+            <div class="card-switch">
+                <label class="switch">
+                    <input type="checkbox" class="toggle">
+                    <span class="slider"></span>
+                    <span class="card-side"></span>
+                    <div class="flip-card__inner">
+                        <div class="flip-card__front">
+                            <div class="title">Log in</div>
+                            <form class="flip-card__form" action="/login" method="POST">
+                                <input class="flip-card__input" name="email" placeholder="Email" type="email" aria-label="Email" required>
+                                <input class="flip-card__input" name="password" placeholder="Password" type="password" aria-label="Password" required>
+                                <button class="flip-card__btn">Let’s go!</button>
+                            </form>
+                        </div>
+                        <div class="flip-card__back">
+                            <div class="title">Sign up</div>
+                            <form class="flip-card__form" action="/signup" method="POST">
+                                <input class="flip-card__input" name="name" placeholder="Name" type="text" aria-label="Name" required>
+                                <input class="flip-card__input" name="email" placeholder="Email" type="email" aria-label="Email" required>
+                                <input class="flip-card__input" name="password" placeholder="Password" type="password" aria-label="Password" required>
+                                <button class="flip-card__btn">Confirm!</button>
+                            </form>
+                        </div>
+                    </div>
+                </label>
+            </div>   
+        </div>
+    </div>
+</body>
+</html>

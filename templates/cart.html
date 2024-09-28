@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/static/css/cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <section id="header">
+        <a><img src="/static/images/OutFitMe-Logo.jpg" alt="OutFitMe Logo" class="logo" width="250px"></a>
+
+        <div>
+            <ul id="navbar">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Profile <i class="fa fa-user" style="font-size:27px"></i></a></li>
+                <li><a href="#"><i class="fa fa-shopping-bag" style="font-size:24px">( <span id="cart-count">0</span> )</i></a></li>
+                <!-- ( <span id="cart-count">0</span> ) -->
+            </ul>
+        </div>
+    </section>
+
+    <a href="/landingpage.html" class="back"><i class="fa fa-chevron-left back" style="font-size:30px"></i>Back</a>
+
+    <h2 class="text">Shopping Bag</h2>
+
+    <section id="cart-summary-container">
+        <div class="cart-items-container" id="cart-items-container"></div> 
+
+        <div class="order-summary-container">
+            <div class="order-summary">
+                <h3>Order Summary:</h3>
+                <div class="order-summary-row">
+                    <div>Items (<span id="total-items">0</span>):</div>
+                    <div class="payment-summary-money" id="items-total">Rs. 0.00</div>
+                </div>
+                <div class="order-summary-row">
+                    <div>Shipping & handling:</div>
+                    <div class="payment-summary-money">Rs. 50.00</div>
+                </div>
+                <div class="order-summary-row subtotal-row">
+                    <div>Total before tax:</div>
+                    <div class="payment-summary-money" id="subtotal">Rs. 0.00</div>
+                </div>
+                <div class="order-summary-row">
+                    <div>Estimated tax (10%):</div>
+                    <div class="payment-summary-money" id="tax">Rs. 0.00</div>
+                </div>
+                <div class="order-summary-row total-row">
+                    <div>Order total:</div>
+                    <div class="payment-summary-money" id="total">Rs. 0.00</div>
+                </div>
+                <button class="place-order-button">Place order</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        
+        function loadCartItems() {
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            let cartContainer = document.getElementById('cart-items-container');
+            let totalItems = 0;
+            let totalAmount = 0;
+            cartContainer.innerHTML = '';
+
+            cartItems.forEach(item => {
+                let itemTotal = item.quantity * parseFloat(item.price.replace('Rs. ', '').replace(',', ''));
+                totalItems += item.quantity;
+                totalAmount += itemTotal;
+
+                let cartItemHTML = `
+                    <div class="cart-item-container">
+                        <div class="cart-item-details-grid">
+                            <img class="product-image" src="${item.image}" alt="${item.name}">
+                            <div class="cart-item-details">
+                                <p class="brand">${item.brand}</p>
+                                <h3 class="product-name">${item.name}</h3>
+                                <div class="product-price">Rs. ${item.price}</div>
+                                <div class="product-info">
+                                    <span>Size:</span> ${item.size}
+                                </div>
+                                <div class="total-price">
+                                    <span>Total:</span> Rs. ${itemTotal.toFixed(2)}
+                                </div>
+                            </div>
+                            <div class="cart-actions">
+                                <select class="quantity-select" data-id="${item.id}">
+                                    <option value="1" ${item.quantity === 1 ? 'selected' : ''}>1</option>
+                                    <option value="2" ${item.quantity === 2 ? 'selected' : ''}>2</option>
+                                    <option value="3" ${item.quantity === 3 ? 'selected' : ''}>3</option>
+                                </select>
+                            </div>
+                            <button class="delete-item-btn" data-id="${item.id}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                cartContainer.innerHTML += cartItemHTML;
+            });
+
+            document.getElementById('total-items').innerText = totalItems;
+            document.getElementById('items-total').innerText = `Rs. ${totalAmount.toFixed(2)}`;
+            document.getElementById('subtotal').innerText = `Rs. ${(totalAmount + 50).toFixed(2)}`;  
+            document.getElementById('tax').innerText = `Rs. ${(totalAmount * 0.1).toFixed(2)}`;  
+            document.getElementById('total').innerText = `Rs. ${(totalAmount + 50 + totalAmount * 0.1).toFixed(2)}`; 
+    
+            document.querySelectorAll('.delete-item-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    let productId = this.getAttribute('data-id');
+                    removeCartItem(productId); 
+                });
+            });
+        }
+    
+        function removeCartItem(productId) {
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            
+            cartItems = cartItems.filter(item => item.id !== productId);
+
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            
+            loadCartItems();
+        }
+    
+        window.onload = loadCartItems;
+    </script>
+</body>
+</html>
