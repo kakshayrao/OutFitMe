@@ -1,4 +1,3 @@
-# coding=utf-8
 import torch
 import torch.utils.data as data
 import torchvision.transforms as transforms
@@ -121,13 +120,13 @@ class CPDataset(data.Dataset):
                 (parse_array == 13).astype(np.float32) + \
                 (parse_array == 16).astype(np.float32) + \
                 (parse_array == 17).astype(
-                np.float32)  # CP-VTON+ TOM input (reserved regions)
+                np.float32)  
 
         parse_cloth = (parse_array == 5).astype(np.float32) + \
             (parse_array == 6).astype(np.float32) + \
-            (parse_array == 7).astype(np.float32)    # upper-clothes labels
+            (parse_array == 7).astype(np.float32)    
 
-        # shape downsample
+      
         parse_shape_ori = Image.fromarray((parse_shape*255).astype(np.uint8))
         parse_shape = parse_shape_ori.resize(
             (self.fine_width//16, self.fine_height//16), Image.BILINEAR)
@@ -138,14 +137,14 @@ class CPDataset(data.Dataset):
         shape_ori = self.transform(parse_shape_ori)  # [-1,1]
         shape = self.transform(parse_shape)  # [-1,1]
         phead = torch.from_numpy(parse_head)  # [0,1]
-        # phand = torch.from_numpy(parse_hand)  # [0,1]
+       
         pcm = torch.from_numpy(parse_cloth)  # [0,1]
 
         # upper cloth
         im_c = im * pcm + (1 - pcm)  # [-1,1], fill 1 for other parts
         im_h = im * phead - (1 - phead)  # [-1,1], fill -1 for other parts
 
-        # load pose points
+        
         pose_name = im_name.replace('.jpg', '_keypoints.json')
         with open(osp.join(self.data_path, 'pose', pose_name), 'r') as f:
             pose_label = json.load(f)
@@ -171,10 +170,10 @@ class CPDataset(data.Dataset):
             one_map = self.transform(one_map)
             pose_map[i] = one_map[0]
 
-        # just for visualization
+       
         im_pose = self.transform(im_pose)
 
-        # cloth-agnostic representation
+        
         agnostic = torch.cat([shape, im_h, pose_map], 0)
 
         if self.stage == 'GMM':
